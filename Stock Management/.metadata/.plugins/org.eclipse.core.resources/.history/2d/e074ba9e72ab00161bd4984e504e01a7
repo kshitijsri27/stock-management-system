@@ -1,0 +1,165 @@
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+
+public class HomePage extends JFrame implements ActionListener {
+  
+	private String Breakfast[] = {"Choose Breakfast", "Tea", "Coffee", "Bournvita", "Complan", "Protinex", "Cornflex", "Bread-Butter", "Bread-Jam"}; 
+
+	JTextField Welcome = new JTextField("Your Breakfast For the Day");
+	JTextArea Ingredients = new JTextArea();
+	JComboBox<String> MenuList = new JComboBox<String>();
+	JButton Prepare = new JButton("Prepare");
+		
+	public HomePage(){
+		
+		for (int i=0; i<Breakfast.length; i++)
+		{
+			MenuList.addItem(Breakfast[i]);
+		}
+		
+		Welcome.setEditable(false);
+		Prepare.setFocusable(false);
+		
+		MenuList.addActionListener(this);
+		Prepare.addActionListener(this);
+		
+		Ingredients.setBounds(100, 0, 100, 150);
+		
+		this.setLayout(new FlowLayout());
+		this.add(Welcome);
+		this.add(Ingredients);
+		this.add(MenuList);
+		System.out.println("");
+		this.add(Prepare);
+		
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource()==MenuList)
+		{
+			String Item = (String) MenuList.getSelectedItem();
+			
+			if(Item.equals("Tea"))
+			{
+				Ingredients.setText("Ingredients per cup..." + "\n" + "Milk - 73%" + "\n" + 
+								"Water - 24%" + "\n" + "Tea Leaf - 1%" + "\n" + "Sugar - 1%" +
+								"\n" + "Ginger - 0.3%" + "\n" + "Black Pepper - 0.3%" + "\n" + "Tulsi - 0.4%");
+			}
+			
+			else if(Item.equals("Coffee"))
+			{
+				Ingredients.setText("Ingredients per cup..." + "\n" + "Milk - 73%" + "\n" + 
+									"Water - 22%" + "\n" + "Coffee - 2%" + "\n" + "Sugar - 2%" +
+									"\n" + "Chocolate - 1%");
+			
+			}
+			
+			else if(Item.equals("Complan"))
+			{
+				Ingredients.setText("Ingredients per cup..." + "\n" + "Milk - 90%" + "\n" +
+									"Sugar - 4%" + "\n" + "Complan - 6%");
+			
+			}
+			
+			else if(Item.equals("Bournvita"))
+			{
+				Ingredients.setText("Ingredients per cup..." + "\n" + "Milk - 90%" + "\n" +
+									"Sugar - 4%" + "\n" + "Complan - 6%");
+			
+				
+			}
+			
+			else if(Item.equals("Protinex"))
+			{
+				Ingredients.setText("Ingredients per cup..." + "\n" + "Milk - 90%" + "\n" +
+						"Sugar - 4%" + "\n" + "Protinex - 6%");
+			
+			}
+			
+			else if(Item.equals("Cornflex"))
+			{
+				Ingredients.setText("Ingredients per bowl..." + "\n" + "Milk - 90%" + "\n" +
+									"Cornflex - 30%");
+			}
+			
+			else if(Item.equals("Bread-Butter"))
+			{
+				Ingredients.setText("Ingredients per piece..." + "\n" + 
+								"Bread - 1" + "\n" + "Butter - 20%");
+			}
+			
+			else if(Item.equals("Bread-Jam"))
+			{
+				Ingredients.setText("Ingredients per piece..." + "\n" + 
+									"Bread - 1" + "\n" + "Jam - 20%");
+			}
+			
+			else
+			{
+				Ingredients.setText("Please Select your Breakfast");
+			}
+		}
+		
+		else if(e.getSource()==Prepare){
+			
+			String url = "jdbc:mysql://localhost:3306/MakeProducts";
+			String user = "root";
+			String password = "123";
+			
+			String Item = (String) MenuList.getSelectedItem();
+			
+			if(Item.equals("Tea"))
+			{
+				System.out.println("Enter amount of tea to be made");
+				Scanner amount = new Scanner(System.in);
+				int amt =  amount.nextInt();
+				
+				try{
+					
+					Connection myConn = DriverManager.getConnection(url, user, password);
+					Statement stmt = myConn.createStatement();
+					String sql = "select quantity from rawMaterials where prodID>=01 AND prodID<=07";
+					ResultSet myRs = stmt.executeQuery(sql);
+					
+					while(myRs.next())
+					{
+						
+					}
+				}
+				catch(Exception e2){
+					e2.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+				
+				JFrame Menu = new HomePage();
+				Menu.setTitle("Breakfast");
+				Menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				Menu.setSize(300, 200);
+				Menu.setVisible(true);
+				
+			}
+
+}
